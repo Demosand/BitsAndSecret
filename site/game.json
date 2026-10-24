@@ -1,35 +1,35 @@
 {
   "loader": "Build/game-405b6ad14910.loader.js",
   "config": {
-    "dataUrl": "Build/game-f710baceb883.data.unityweb",
-    "frameworkUrl": "Build/game-7476f0d989e2.framework.js.unityweb",
-    "codeUrl": "Build/game-91fd6f9ac791.wasm.unityweb"
+    "dataUrl": "Build/game-cbf63ef852be.data.unityweb",
+    "frameworkUrl": "Build/game-67c9ed727477.framework.js.unityweb",
+    "codeUrl": "Build/game-cc849f0c5997.wasm.unityweb"
   },
   "chunkedFiles": {
-    "Build/game-f710baceb883.data.unityweb": {
+    "Build/game-cbf63ef852be.data.unityweb": {
       "size": 581001943,
       "parts": [
-        "Build/game-f710baceb883.data.unityweb.part000",
-        "Build/game-f710baceb883.data.unityweb.part001",
-        "Build/game-f710baceb883.data.unityweb.part002",
-        "Build/game-f710baceb883.data.unityweb.part003",
-        "Build/game-f710baceb883.data.unityweb.part004",
-        "Build/game-f710baceb883.data.unityweb.part005",
-        "Build/game-f710baceb883.data.unityweb.part006",
-        "Build/game-f710baceb883.data.unityweb.part007",
-        "Build/game-f710baceb883.data.unityweb.part008",
-        "Build/game-f710baceb883.data.unityweb.part009",
-        "Build/game-f710baceb883.data.unityweb.part010",
-        "Build/game-f710baceb883.data.unityweb.part011",
-        "Build/game-f710baceb883.data.unityweb.part012",
-        "Build/game-f710baceb883.data.unityweb.part013",
-        "Build/game-f710baceb883.data.unityweb.part014",
-        "Build/game-f710baceb883.data.unityweb.part015",
-        "Build/game-f710baceb883.data.unityweb.part016",
-        "Build/game-f710baceb883.data.unityweb.part017",
-        "Build/game-f710baceb883.data.unityweb.part018"
+        "Build/game-cbf63ef852be.data.unityweb.part000",
+        "Build/game-cbf63ef852be.data.unityweb.part001",
+        "Build/game-cbf63ef852be.data.unityweb.part002",
+        "Build/game-cbf63ef852be.data.unityweb.part003",
+        "Build/game-cbf63ef852be.data.unityweb.part004",
+        "Build/game-cbf63ef852be.data.unityweb.part005",
+        "Build/game-cbf63ef852be.data.unityweb.part006",
+        "Build/game-cbf63ef852be.data.unityweb.part007",
+        "Build/game-cbf63ef852be.data.unityweb.part008",
+        "Build/game-cbf63ef852be.data.unityweb.part009",
+        "Build/game-cbf63ef852be.data.unityweb.part010",
+        "Build/game-cbf63ef852be.data.unityweb.part011",
+        "Build/game-cbf63ef852be.data.unityweb.part012",
+        "Build/game-cbf63ef852be.data.unityweb.part013",
+        "Build/game-cbf63ef852be.data.unityweb.part014",
+        "Build/game-cbf63ef852be.data.unityweb.part015",
+        "Build/game-cbf63ef852be.data.unityweb.part016",
+        "Build/game-cbf63ef852be.data.unityweb.part017",
+        "Build/game-cbf63ef852be.data.unityweb.part018"
       ]
     }
   },
-  "buildId": "6a3a470c2b7a"
+  "buildId": "7484eb2b5a34"
 }
