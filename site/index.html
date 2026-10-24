@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102d4b"><title>Bits & Bops — BitsAndSecret</title><link rel="stylesheet" href="player.css?v=568be0e36c35"></head>
+<body>
+<main id="player">
+ <canvas id="game" width="1280" height="720" tabindex="0" aria-label="Bits & Bops — игровое окно"></canvas>
+ <section id="loading" aria-live="polite">
+  <div class="logo-frame"><img src="logo.png" alt="Bits & Bops" id="logo"></div>
+  <p class="edition">BROWSER EDITION · BITSANDSECRET</p>
+  <h1 id="status">Попади в ритм.</h1>
+  <p id="detail">Данные игры загрузятся при первом запуске.<br>Прогресс сохраняется в этом браузере.</p>
+  <button id="start">Играть <span aria-hidden="true">▶</span></button>
+  <progress id="progress" max="1" value="0" hidden aria-label="Загрузка игры"></progress>
+  <p class="keys"><kbd>Enter</kbd> выбрать · <kbd>←</kbd><kbd>→</kbd> меню · <kbd>Space</kbd> ритм</p>
+ </section>
+ <div id="toast" role="status" hidden></div>
+</main>
+<footer><span id="save-status">Локальные сохранения</span><nav aria-label="Настройки проигрывателя"><button id="export" disabled>Скачать сохранение</button><button id="import" disabled>Загрузить сохранение</button><button id="fullscreen" title="Полный экран">Полный экран ⛶</button></nav></footer>
+<input type="file" id="save-file" accept="application/json,.json" hidden>
+<noscript>Для запуска игры нужен JavaScript.</noscript><script src="player.js?v=66761c68f83e"></script>
+</body></html>

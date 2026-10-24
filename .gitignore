@@ -1,0 +1,3 @@
+# Only the prepared site belongs in this publishing checkout.
+*.log
+.DS_Store
