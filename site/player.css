@@ -1,2 +1,51 @@
 :root{color-scheme:dark;font:16px/1.5 system-ui,sans-serif;color:#f8f2df;background:#081e36}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;flex-direction:column}#player{flex:1;position:relative;display:grid;place-items:center;min-height:calc(100vh - 56px);overflow:hidden;background:#102d4b}canvas{width:min(100%,calc((100vh - 56px)*16/9));aspect-ratio:16/9;max-height:calc(100vh - 56px);background:#000;outline:none}#loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:24px;background:radial-gradient(ellipse at 50% 0,#387689 0,#164566 45%,#102d4b 85%)}#loading[hidden]{display:none}#logo{width:390px;max-width:78vw;height:210px;object-fit:cover;object-position:50% 2%;margin-top:-40px}.edition{font-size:10px;letter-spacing:.2em;color:#b1dce3;margin:15px 0 10px}h1{font-size:clamp(25px,4vw,38px);letter-spacing:-.03em;margin:8px 0;font-weight:700}#detail{font-size:14px;color:#c7dbe4;margin:8px 0 24px}button{font:inherit;border:0;cursor:pointer}#start{border-radius:8px;padding:12px 34px;min-width:220px;color:#092d4b;background:#ffda68;font-weight:750;box-shadow:0 4px 0 #bd8c30;transition:transform .15s}#start:hover{transform:translateY(-2px)}#start:active{transform:translateY(2px);box-shadow:0 2px 0 #bd8c30}#start span{padding-left:22px;font-size:12px}.keys{font-size:11px;margin-top:32px;color:#b7d2df}kbd{font:11px system-ui;border:1px solid #7795aa;border-bottom-width:2px;padding:1px 5px;border-radius:3px;margin:0 2px}progress{width:280px;max-width:75vw;height:10px;appearance:none;border:0;border-radius:9px;overflow:hidden;background:#092541}progress::-webkit-progress-bar{background:#092541}progress::-webkit-progress-value{background:#ffda68;border-radius:9px}progress::-moz-progress-bar{background:#ffda68}footer{min-height:56px;padding:9px 20px;display:flex;gap:12px;align-items:center;justify-content:space-between;font-size:11px;color:#a5c0d3;background:#081e36}nav{display:flex;gap:8px;flex-wrap:wrap}nav button{font-size:11px;border-radius:4px;color:#cbdde7;padding:8px 10px;background:#17354f}nav button:hover{background:#254b66}nav button:disabled{opacity:.4;cursor:default}#toast{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);padding:10px 18px;border-radius:7px;background:#071e37e8;max-width:90%;font-size:13px;text-align:center}button:focus-visible{outline:3px solid #fff;outline-offset:4px}@media(max-width:620px){footer{justify-content:center;flex-wrap:wrap;padding:8px;gap:6px}#logo{width:280px;height:160px;margin-top:-20px}.keys{font-size:10px;margin-top:22px}#player{min-height:calc(100vh - 90px)}}
 .logo-frame{width:min(360px,70vw);aspect-ratio:1.42;overflow:hidden;position:relative;margin-top:-28px}#logo{position:absolute;width:270%;max-width:none;height:auto;top:-2px;left:50%;transform:translateX(-50%);margin:0}
+
+/* Reserve space for touch controls: the game image is never covered. */
+:root{--footer-height:56px;--touch-height:64px;--screen-height:100vh}
+@supports(height:100dvh){:root{--screen-height:100dvh}}
+body{min-height:var(--screen-height)}
+#player{min-height:calc(var(--screen-height) - var(--footer-height))}
+canvas{width:min(100%,calc((var(--screen-height) - var(--footer-height))*16/9));max-height:calc(var(--screen-height) - var(--footer-height))}
+#touch-controls[hidden]{display:none}
+#touch-controls{display:flex;align-items:center;justify-content:center;gap:16px;width:100%;min-height:var(--touch-height);padding:6px max(8px,env(safe-area-inset-right)) 6px max(8px,env(safe-area-inset-left));user-select:none;-webkit-user-select:none;touch-action:none;-webkit-touch-callout:none}
+.touch-group{display:flex;align-items:center;gap:4px}
+#touch-controls button{width:40px;height:42px;padding:0;border:1px solid #7095ae65;border-radius:11px;background:#193b55;color:#dbeaf1;font-size:22px;line-height:1;touch-action:none;-webkit-tap-highlight-color:transparent;transition:background .07s,border-color .07s}
+#touch-controls .touch-menu button{font-size:12px;color:#b8d1de;background:#13334d}
+#touch-controls .touch-actions{gap:8px}
+#touch-controls .touch-actions button{width:52px;height:52px;border-radius:50%;font-size:21px;display:flex;align-items:center;justify-content:center;gap:3px;border-color:#e4be5f80;background:#e4be5f19;color:#ffe199}
+#touch-controls small{font-size:9px;opacity:.55;align-self:flex-end;margin-bottom:11px}
+#touch-controls button.is-held{background:#ffda68;color:#102d4b;border-color:#ffda68}
+body.touch-mode #player{grid-template-rows:auto auto;align-content:center;row-gap:0}
+body.touch-mode canvas{touch-action:none;width:min(100%,calc((var(--screen-height) - var(--footer-height) - var(--touch-height))*16/9));max-height:calc(var(--screen-height) - var(--footer-height) - var(--touch-height));grid-row:1}
+body.touch-mode #touch-controls{grid-row:2}
+body.touch-mode #toast{bottom:calc(var(--touch-height) + 10px)}
+body.touch-mode footer{padding:5px max(6px,env(safe-area-inset-right)) max(5px,env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-left));gap:4px;justify-content:center;flex-wrap:wrap;min-height:38px}
+body.touch-mode footer nav{gap:4px;justify-content:center}
+body.touch-mode footer nav button{font-size:10px;padding:7px 8px}
+body.touch-mode #save-status{font-size:9px}
+#touch-toggle[aria-pressed=true]{color:#ffda68;background:#25485d}
+@media(max-width:430px){
+ #touch-controls{gap:8px;padding-left:6px;padding-right:6px}
+ #touch-controls button{width:34px;height:40px;font-size:20px}
+ #touch-controls .touch-actions button{width:46px;height:46px}
+ #touch-controls .touch-actions{gap:6px}
+ body.touch-mode footer nav button{font-size:9px;padding:6px}
+}
+@media(max-width:340px){
+ #touch-controls{gap:6px;padding-left:4px;padding-right:4px}
+ #touch-controls button{width:30px;height:38px}
+ #touch-controls .touch-group{gap:3px}
+ #touch-controls .touch-actions button{width:42px;height:42px}
+}
+@media(orientation:landscape) and (max-height:500px){
+ #loading{padding:12px}
+ .logo-frame{width:clamp(80px,28vh,130px);margin-top:0;aspect-ratio:1.42}
+ .edition{margin:4px 0;font-size:8px}
+ h1{font-size:24px;margin:3px 0}
+ #detail{font-size:11px;margin:4px 0 10px}
+ .keys{margin:12px 0 0}
+ #start{padding:9px 24px}
+ body.touch-mode footer #save-status{display:none}
+}
+footer{padding-bottom:max(9px,env(safe-area-inset-bottom))}

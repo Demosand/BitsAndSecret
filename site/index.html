@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102d4b"><title>Bits & Bops — BitsAndSecret</title><link rel="stylesheet" href="player.css?v=568be0e36c35"></head>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#102d4b"><title>Bits & Bops — BitsAndSecret</title><link rel="stylesheet" href="player.css?v=033c675c6bf8"></head>
 <body>
 <main id="player">
  <canvas id="game" width="1280" height="720" tabindex="0" aria-label="Bits & Bops — игровое окно"></canvas>
@@ -13,8 +13,24 @@
   <p class="keys"><kbd>Enter</kbd> выбрать · <kbd>←</kbd><kbd>→</kbd> меню · <kbd>Space</kbd> ритм</p>
  </section>
  <div id="toast" role="status" hidden></div>
+ <section id="touch-controls" aria-label="Экранное управление" hidden>
+  <div class="touch-group touch-directions" aria-label="Направления">
+   <button data-touch-key="ArrowLeft" aria-label="Влево">←</button>
+   <button data-touch-key="ArrowUp" aria-label="Вверх">↑</button>
+   <button data-touch-key="ArrowDown" aria-label="Вниз">↓</button>
+   <button data-touch-key="ArrowRight" aria-label="Вправо">→</button>
+  </div>
+  <div class="touch-group touch-menu">
+   <button data-touch-key="Enter" aria-label="Выбрать, Enter">OK</button>
+   <button data-touch-key="Escape" aria-label="Назад или пауза, Escape">Ⅱ</button>
+  </div>
+  <div class="touch-group touch-actions">
+   <button data-touch-key="KeyJ" aria-label="Действие 1, J">1<small>J</small></button>
+   <button data-touch-key="KeyK" aria-label="Действие 2, K">2<small>K</small></button>
+  </div>
+ </section>
 </main>
-<footer><span id="save-status">Локальные сохранения</span><nav aria-label="Настройки проигрывателя"><button id="export" disabled>Скачать сохранение</button><button id="import" disabled>Загрузить сохранение</button><button id="fullscreen" title="Полный экран">Полный экран ⛶</button></nav></footer>
+<footer><span id="save-status">Локальные сохранения</span><nav aria-label="Настройки проигрывателя"><button id="export" disabled>Скачать сохранение</button><button id="import" disabled>Загрузить сохранение</button><button id="touch-toggle" aria-pressed="false" aria-controls="touch-controls" title="Показать или скрыть экранные кнопки">Кнопки</button><button id="fullscreen" title="Полный экран">Полный экран ⛶</button></nav></footer>
 <input type="file" id="save-file" accept="application/json,.json" hidden>
-<noscript>Для запуска игры нужен JavaScript.</noscript><script src="player.js?v=66761c68f83e"></script>
+<noscript>Для запуска игры нужен JavaScript.</noscript><script src="player.js?v=78408efef361"></script>
 </body></html>
