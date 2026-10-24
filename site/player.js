@@ -1,9 +1,9 @@
 'use strict';
-const $=id=>document.getElementById(id);let instance,toastTimer,importedSave=false;
+const $=id=>document.getElementById(id);let instance,toastTimer,importedSave=false,startingGame=false,removingGame=false,removedGame=false;
 const offlineReady='serviceWorker' in navigator?navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(()=>navigator.serviceWorker.ready).then(()=>{if(navigator.serviceWorker.controller)return;return new Promise(resolve=>{navigator.serviceWorker.addEventListener('controllerchange',resolve,{once:true});setTimeout(resolve,3000)})}).catch(error=>console.warn('Offline cache unavailable',error)):Promise.resolve();
 function toast(text){$('toast').textContent=String(text).slice(0,220);$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,6000)}
-function chunkedFetch(files){const original=window.fetch.bind(window);const routes=new Map(Object.entries(files).map(([path,data])=>[new URL(path,location.href).href,data]));window.fetch=async(input,options)=>{const url=new URL(typeof input==='string'||input instanceof URL?input:input.url,location.href).href;const entry=routes.get(url);if(!entry)return original(input,options);let index=0;const stream=new ReadableStream({async pull(controller){try{if(index===entry.parts.length){controller.close();return}const response=await original(new URL(entry.parts[index++],location.href),options);if(!response.ok)throw Error('Не удалось загрузить часть игры: '+response.status);controller.enqueue(new Uint8Array(await response.arrayBuffer()));}catch(error){controller.error(error)}}});return new Response(stream,{status:200,headers:{'Content-Type':'application/octet-stream','Content-Length':String(entry.size)}})}}
-$('start').addEventListener('click',async()=>{if(instance)return;const button=$('start');button.hidden=true;$('progress').hidden=false;$('status').textContent='Загружаем игру…';$('detail').textContent='Оставь эту вкладку открытой до завершения загрузки.';try{document.body.classList.toggle('touch-mode',touchWanted);await offlineReady;if(!window.WebAssembly)throw Error('Этот браузер не поддерживает WebAssembly.');const configResponse=await fetch('game.json',{cache:'no-cache'});if(!configResponse.ok)throw Error('Файлы игры пока недоступны.');const game=await configResponse.json();$('game').dataset.build=game.buildId||game.config.codeUrl;console.info('[BitsAndSecret] build '+$('game').dataset.build);if(configResponse.headers.get('X-Bits-Offline')==='1')toast('Запускается сохранённая офлайн-версия игры.');chunkedFetch(game.chunkedFiles||{});const script=document.createElement('script');script.src=game.loader;await new Promise((resolve,reject)=>{script.onload=resolve;script.onerror=()=>reject(Error('Не удалось загрузить игровой движок.'));document.body.append(script)});instance=await createUnityInstance($('game'),{...game.config,devicePixelRatio:touchWanted?Math.min(window.devicePixelRatio||1,1.5):(window.devicePixelRatio||1),streamingAssetsUrl:'StreamingAssets',companyName:'BitsAndSecret',productName:'BitsAndSecret Web',productVersion:'1.0',showBanner:(message,type)=>{if(type==='error')toast(message);else console.warn(message)}},progress=>{$('progress').value=progress;$('status').textContent=progress<.9?`Загружаем игру… ${Math.round(progress*100)}%`:'Запускаем…'});window.bitsGame=instance;$('loading').hidden=true;$('game').focus();$('export').disabled=false;$('import').disabled=false;updateTouchControls();}catch(error){console.error(error);$('status').textContent='Не удалось запустить игру';$('detail').textContent='Обнови страницу и попробуй снова. Если ошибка повторится, открой сайт в актуальном Chrome или Edge.';button.textContent='Попробовать снова';button.hidden=false;button.onclick=()=>location.reload();$('progress').hidden=true}});
+function chunkedFetch(files){const original=window.fetch.bind(window);const routes=new Map(Object.entries(files).map(([path,data])=>[new URL(path,location.href).href,data]));window.fetch=async(input,options)=>{const url=new URL(typeof input==='string'||input instanceof URL?input:input.url,location.href).href;const entry=routes.get(url);if(!entry)return original(input,options);let index=0;const stream=new ReadableStream({async pull(controller){try{if(index===entry.parts.length){controller.close();return}const response=await original(new URL(entry.parts[index++],location.href),options);if(!response.ok)throw Error('Не удалось загрузить часть игры: '+response.status);controller.enqueue(new Uint8Array(await response.arrayBuffer()));}catch(error){controller.error(error)}}});const response=new Response(stream,{status:200,headers:{'Content-Type':'application/octet-stream','Content-Length':String(entry.size)}});Object.defineProperty(response,'url',{value:url});return response}}
+$('start').addEventListener('click',async()=>{if(removedGame){location.reload();return;}if(instance||startingGame||removingGame)return;startingGame=true;$('remove-game').disabled=true;const button=$('start');button.hidden=true;$('progress').hidden=false;$('status').textContent='Загружаем игру…';$('detail').textContent='Оставь эту вкладку открытой до завершения загрузки.';try{document.body.classList.toggle('touch-mode',touchWanted);await offlineReady;if(!window.WebAssembly)throw Error('Этот браузер не поддерживает WebAssembly.');const configResponse=await fetch('game.json',{cache:'no-cache'});if(!configResponse.ok)throw Error('Файлы игры пока недоступны.');const game=await configResponse.json();$('game').dataset.build=game.buildId||game.config.codeUrl;console.info('[BitsAndSecret] build '+$('game').dataset.build);if(configResponse.headers.get('X-Bits-Offline')==='1')toast('Запускается сохранённая офлайн-версия игры.');chunkedFetch(game.chunkedFiles||{});const script=document.createElement('script');script.src=game.loader;await new Promise((resolve,reject)=>{script.onload=resolve;script.onerror=()=>reject(Error('Не удалось загрузить игровой движок.'));document.body.append(script)});instance=await createUnityInstance($('game'),{...game.config,devicePixelRatio:touchWanted?Math.min(window.devicePixelRatio||1,1.5):(window.devicePixelRatio||1),streamingAssetsUrl:'StreamingAssets',companyName:'BitsAndSecret',productName:'BitsAndSecret Web',productVersion:'1.0',showBanner:(message,type)=>{if(type==='error')toast(message);else console.warn(message)}},progress=>{$('progress').value=progress;$('status').textContent=progress<.9?`Загружаем игру… ${Math.round(progress*100)}%`:'Запускаем…'});window.bitsGame=instance;$('loading').hidden=true;$('game').focus();$('export').disabled=false;$('import').disabled=false;startingGame=false;$('remove-game').disabled=false;updateTouchControls();}catch(error){startingGame=false;$('remove-game').disabled=false;console.error(error);$('status').textContent='Не удалось запустить игру';$('detail').textContent='Обнови страницу и попробуй снова. Если ошибка повторится, открой сайт в актуальном Chrome или Edge.';button.textContent='Попробовать снова';button.hidden=false;button.onclick=()=>location.reload();$('progress').hidden=true}});
 $('game').addEventListener('pointerdown',()=>$('game').focus());
 $('fullscreen').addEventListener('click',async()=>{
  if(document.fullscreenElement){await document.exitFullscreen();return;}
@@ -95,3 +95,68 @@ if('ResizeObserver' in window)new ResizeObserver(entries=>{
  refreshGameSize();
 }).observe(document.querySelector('footer'));
 updateTouchControls();
+
+
+// Download removal UI. Keep personal saves and all other games' valid entries.
+const removeDialog=$('remove-dialog');
+$('remove-game').addEventListener('click',()=>{
+ if(startingGame||removingGame)return;
+ releaseAllTouch();$('remove-status').hidden=true;
+ if(typeof removeDialog.showModal==='function')removeDialog.showModal();
+ else if(confirm('Удалить загруженные файлы Bits & Bops? Игра закроется. Сохранения останутся.'))removeDownloadedGame();
+});
+$('remove-cancel').addEventListener('click',()=>removeDialog.close());
+removeDialog.addEventListener('cancel',event=>{if(removingGame)event.preventDefault()});
+removeDialog.addEventListener('close',()=>{if(instance)$('game').focus({preventScroll:true})});
+// Keep dialog Enter/Escape from also reaching the running game's input listener.
+for(const type of ['keydown','keyup'])window.addEventListener(type,event=>{if(removeDialog.open)event.stopImmediatePropagation()},true);
+$('remove-confirm').addEventListener('click',removeDownloadedGame);
+async function waitForSaveWrites(module){
+ const deadline=Date.now()+10000;
+ while(module?.bitsSavePending){
+  if(Date.now()>deadline)throw Error('Сохранение ещё записывается. Подожди немного и повтори удаление.');
+  await new Promise(resolve=>setTimeout(resolve,30));
+ }
+}
+function showRemovedPlayer(success){
+ removedGame=true;instance=null;window.bitsGame=null;releaseAllTouch();updateTouchControls();
+ $('loading').hidden=false;$('progress').hidden=true;
+ $('status').textContent=success?'Файлы игры удалены':'Игра остановлена';
+ $('detail').textContent=success?'Место для загруженных данных освобождено. Сохранения остались в браузере.':'Можно повторить очистку или перезапустить страницу.';
+ $('start').textContent=success?'Вернуться к запуску':'Перезапустить страницу';$('start').hidden=false;
+ $('export').disabled=true;$('import').disabled=true;
+}
+async function removeDownloadedGame(){
+ if(removingGame||startingGame)return;
+ removingGame=true;
+ $('remove-confirm').disabled=true;$('remove-cancel').disabled=true;$('remove-game').disabled=true;
+ $('remove-status').hidden=false;$('remove-status').textContent='Сохраняем прогресс и закрываем игру…';
+ let saveFailed=false;const onSaveError=()=>{saveFailed=true};
+ window.addEventListener('bits-save-error',onSaveError);
+ try{
+  // Import already suspends snapshots, so an imported backup cannot be replaced.
+  if(instance){
+   const running=instance;
+   persistProgress();await waitForSaveWrites(running.Module);
+   if(saveFailed)throw Error('Не удалось записать прогресс. Сначала скачай резервную копию сохранения.');
+   await running.Quit();instance=null;
+   await waitForSaveWrites(running.Module);
+   showRemovedPlayer(false);
+  }
+  $('remove-status').textContent='Удаляем загруженные файлы…';
+  const {purgeGameDownloads}=await import('./storage.js');
+  const result=await purgeGameDownloads();
+  console.info('[BitsAndSecret] download removal',result);
+  showRemovedPlayer(true);
+  $('save-status').textContent='Сохранения сохранены · для игры потребуется загрузка';
+  if(removeDialog.open)removeDialog.close();
+ }catch(error){
+  console.error(error);
+  $('remove-status').textContent=error.message||'Не удалось очистить файлы. Обнови страницу и попробуй снова.';
+  if(!removeDialog.open)toast($('remove-status').textContent);
+  $('remove-game').disabled=false;
+ }finally{
+  window.removeEventListener('bits-save-error',onSaveError);
+  removingGame=false;$('remove-confirm').disabled=false;$('remove-cancel').disabled=false;
+ }
+}
